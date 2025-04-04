@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UEFA Champios League</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<h1>Cuartos de Final</h1>
+
+<form id="cuartosForm">
+    <label for="equipo1">Equipo 1:</label>
+    <input type="text" id="equipo1" name="equipo1" oninput="guardarEquipos()"><br><br>
+
+    <label for="equipo2">Equipo 2:</label>
+    <input type="text" id="equipo2" name="equipo2" oninput="guardarEquipos()"><br><br>
+
+    <label for="equipo3">Equipo 3:</label>
+    <input type="text" id="equipo3" name="equipo3" oninput="guardarEquipos()"><br><br>
+
+    <label for="equipo4">Equipo 4:</label>
+    <input type="text" id="equipo4" name="equipo4" oninput="guardarEquipos()"><br><br>
+
+    <label for="equipo5">Equipo 5:</label>
+    <input type="text" id="equipo5" name="equipo5" oninput="guardarEquipos()"><br><br>
+
+    <label for="equipo6">Equipo 6:</label>
+    <input type="text" id="equipo6" name="equipo6" oninput="guardarEquipos()"><br><br>
+
+    <label for="equipo7">Equipo 7:</label>
+    <input type="text" id="equipo7" name="equipo7" oninput="guardarEquipos()"><br><br>
+
+    <label for="equipo8">Equipo 8:</label>
+    <input type="text" id="equipo8" name="equipo8" oninput="guardarEquipos()"><br><br>
+
+    <button type="button" onclick="generarSemifinales()">Generar Semifinales</button>
+    <button type="button" onclick="reiniciarTodo()">Reset</button>
+</form>
+
+<div id="semifinales"></div>
+<div id="final"></div>
+
+<script>
+    function guardarEquipos() {
+        const equipos = {
+            equipo1: document.getElementById("equipo1").value,
+            equipo2: document.getElementById("equipo2").value,
+            equipo3: document.getElementById("equipo3").value,
+            equipo4: document.getElementById("equipo4").value,
+            equipo5: document.getElementById("equipo5").value,
+            equipo6: document.getElementById("equipo6").value,
+            equipo7: document.getElementById("equipo7").value,
+            equipo8: document.getElementById("equipo8").value
+        };
+
+        localStorage.setItem('cuartosEquipos', JSON.stringify(equipos));
+    }
+
+    function cargarEquipos() {
+        const equiposGuardados = localStorage.getItem('cuartosEquipos');
+        if (equiposGuardados) {
+            const equipos = JSON.parse(equiposGuardados);
+            document.getElementById("equipo1").value = equipos.equipo1 || "";
+            document.getElementById("equipo2").value = equipos.equipo2 || "";
+            document.getElementById("equipo3").value = equipos.equipo3 || "";
+            document.getElementById("equipo4").value = equipos.equipo4 || "";
+            document.getElementById("equipo5").value = equipos.equipo5 || "";
+            document.getElementById("equipo6").value = equipos.equipo6 || "";
+            document.getElementById("equipo7").value = equipos.equipo7 || "";
+            document.getElementById("equipo8").value = equipos.equipo8 || "";
+        }
+    }
+
+    function generarSemifinales() {
+        const equiposGuardados = localStorage.getItem('cuartosEquipos');
+        if (!equiposGuardados) {
+            alert('Por favor, ingresa los equipos.');
+            return;
+        }
+
+        const equipos = JSON.parse(equiposGuardados);
+        const equipo1 = equipos.equipo1;
+        const equipo2 = equipos.equipo2;
+        const equipo3 = equipos.equipo3;
+        const equipo4 = equipos.equipo4;
+        const equipo5 = equipos.equipo5;
+        const equipo6 = equipos.equipo6;
+        const equipo7 = equipos.equipo7;
+        const equipo8 = equipos.equipo8;
+
+        const ganador1 = Math.random() < 0.5 ? equipo1 : equipo2;
+        const ganador2 = Math.random() < 0.5 ? equipo3 : equipo4;
+        const ganador3 = Math.random() < 0.5 ? equipo5 : equipo6;
+        const ganador4 = Math.random() < 0.5 ? equipo7 : equipo8;
+
+        const semifinalesDiv = document.getElementById("semifinales");
+        semifinalesDiv.innerHTML = `
+            <h2>Semifinales</h2>
+            <p>${ganador1} vs ${ganador2}</p>
+            <p>${ganador3} vs ${ganador4}</p>
+            <button type="button" onclick="generarFinal('${ganador1}', '${ganador2}', '${ganador3}', '${ganador4}')">Generar Final</button>
+        `;
+    }
+
+    function generarFinal(ganador1, ganador2, ganador3, ganador4) {
+        const ganadorSemifinal1 = Math.random() < 0.5 ? ganador1 : ganador2;
+        const ganadorSemifinal2 = Math.random() < 0.5 ? ganador3 : ganador4;
+
+        const ganadorFinal = Math.random() < 0.5 ? ganadorSemifinal1 : ganadorSemifinal2;
+
+        const finalDiv = document.getElementById("final");
+        finalDiv.innerHTML = `
+            <h2>Final</h2>
+            <p>${ganadorSemifinal1} vs ${ganadorSemifinal2}</p>
+            <h2>Ganador: ${ganadorFinal}</h2>
+        `;
+    }
+
+    function reiniciarTodo() {
+        localStorage.removeItem('cuartosEquipos');
+        document.getElementById('cuartosForm').reset();
+        document.getElementById('semifinales').innerHTML = '';
+        document.getElementById('final').innerHTML = '';
+    }
+
+    cargarEquipos();
+</script>
+</body>
+</html>
